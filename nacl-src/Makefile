@@ -1,10 +1,9 @@
-CPPFLAGS=-std=c++0x -I$(PWD)/.. -g
+CPPFLAGS=-std=c++0x -I$(PWD) -g
 
-all:	gen-mod-tones demod-stdin
+all:	demod-stdin
 
-gen-mod-tones:	gen-mod-tones.cc
-demod-stdin:	demod-stdin.cc ../dsp.cc ../am_decoder.cc ../nbfm_decoder.cc ../wbfm_decoder.cc
+demod-stdin:	demod-stdin.cc dsp.cc am_decoder.cc nbfm_decoder.cc wbfm_decoder.cc
 
 .PHONY:	clean
 clean:
-	rm -f gen-mod-tones demod-stdin
+	rm -f demod-stdin
