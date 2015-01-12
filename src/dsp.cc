@@ -68,6 +68,13 @@ Samples samplesFromUint8(uint8_t* buffer, int length) {
   return out;
 }
 
+Samples samplesFromInt16(int16_t* buffer, int length) {
+  Samples out(length);
+  for (int i = 0; i < length; ++i) {
+    out[i] = buffer[i] / 32768.0;
+  }
+  return out;
+}
 
 FIRFilter::FIRFilter(const vector<float>& coefficients, int step)
     : coefficients_(coefficients),

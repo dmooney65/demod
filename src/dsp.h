@@ -61,6 +61,15 @@ struct StereoAudio {
 Samples samplesFromUint8(uint8_t* buffer, int length);
 
 /**
+ * Converts the given buffer of signed 16-bit samples into a samples object.
+ * @param buffer A buffer containing the signed 16-bit samples.
+ * @param length The buffer's length.
+ * @param rate The buffer's sample rate.
+ * @return The converted samples.
+ */
+Samples samplesFromInt16(int16_t* buffer, int length);
+
+/**
  * Generates coefficients for a FIR low-pass filter with the given
  * half-amplitude frequency and kernel length at the given sample rate.
  * @param sampleRate The signal's sample rate.
