@@ -1,41 +1,30 @@
-# Radio Receiver
+# Demod
 
-An application to listen to broadcast FM and AM radio from your Chrome browser or your ChromeBook computer using a $15 USB digital TV tuner.
+Simple command line application for doing AM or FM demodulation. Uses unix pipes for data transfer. Takes raw IQ data as input and outputs demodulated audio.
 
-![Radio Receiver screenshot](image-src/interface.png)
+From this [blog post](http://andres.svbtle.com/pipe-sdr-iq-data-through-fm-demodulator-for-fsk9600-ax25-reception) can be read why such project/fork exists.
 
-## What is this
+# Install
 
-Radio Receiver is a Chrome application that uses an USB digital TV receiver to capture radio signals, does FM and AM demodulation in the browser, and plays them through your computer's speakers or headphones. This is called SDR (Software-Defined Radio), because all the radio signal processing is done by software running in the computer.
+    git clone https://github.com/cubehub/demod.git
+    cd demod/src
+    mkdir build
+    cd build
+    cmake ../
+    make
+    make install
 
-Radio Receiver is 100% written in JavaScript, but is nevertheless fast enough that it can run on a 2012 Samsung ChromeBook laptop at full quality.
+# Use cases
+Demodulate and listen audio from FM station IQ data recording
 
-## Features
+    cat fm_radio_r2.iq | demod -mod WBFM -bandwidth 170000 -maxf 75000 -inrate 230400 -outrate 48000 | play -t raw -r 48k -e signed-integer -b 16 -c 2 -V1 -
+    
+Notice that fm_radio_r2.iq is recorded using following command
 
-* Stereo FM.
-* Scan for stations.
-* Record what you hear on the radio.
-* Built-in bands:
-  * International and Japanese FM bands.
-  * Weather band (US and Canada).
-  * Medium Wave AM (requires an upconverter).
-* Free-tuning mode to use the program as a multi-band radio and listen to anything: short wave, air band, marine band, etc.
-* Supported modes: Wideband FM, Narrowband FM, AM, SSB.
+    rtl_fm -f 103.4M -M raw -s 230400 fm_radio_r2.iq
 
-## Compatible hardware and software
+Demodulate FSK9600 raw IQ data recording and pipe output to multimon-ng for packet decoding
 
-Radio Receiver was written to work with an RTL-2832U-based DVB-T (European digital TV) USB receiver, with a R820T tuner chip. You can easily buy one for $15 or less by searching for [RTL2832U R820T] on your favorite online store or web search engine.
-
-You can use this application on a ChromeBook, or on any other computer running a Chrome browser. Just [install it using the Chrome Web Store](https://chrome.google.com/webstore/detail/radio-receiver/miieomcelenidlleokajkghmifldohpo) or any other mechanism, plug in your USB dongle, and click on the icon to start the Radio Receiver application.
-
-To listen to Medium Wave and Short Wave radio, you need an upconverter connected between your antenna and the USB dongle. This upconverter shifts the signals up in frequency so that they can be tuned by your dongle. You can find upconverters for sale by searching for [SDR upconverter] on your favorite online store or web search engine.
-
-## Support
-
-If you'd like to talk about Radio Receiver, or have any bug reports or suggestions, please post a message in [the radioreceiver Google Group](https://groups.google.com/forum/#!forum/radioreceiver).
-
-## Acknowledgements
-
-Kudos and thanks to the [RTL-SDR project](http://sdr.osmocom.org/trac/wiki/rtl-sdr) for figuring out the magic numbers needed to drive the USB tuner.
-
-If you want to experiment further with Software-Defined Radio and listen to more things using your $15 tuner, you can try [the various programs listed on rtl-sdr.com](http://www.rtl-sdr.com/big-list-rtl-sdr-supported-software/).
+    sox -t wav FSK9600raw_rf.wav -esigned-integer -b16 -r 1024000 -t raw - | demod -mod NBFM -maxf 3500 -inputtype i16 -inrate 1024000 -outrate 48000 -channels 1 -squaredoutput | multimon-ng -t raw -a FSK9600 /dev/stdin
+    
+ Notice that multimon-ng must be modified to input 48000 sps audio stream.
