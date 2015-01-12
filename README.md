@@ -27,4 +27,4 @@ Demodulate FSK9600 raw IQ data recording and pipe output to multimon-ng for pack
 
     sox -t wav FSK9600raw_rf.wav -esigned-integer -b16 -r 1024000 -t raw - | demod -mod NBFM -maxf 3500 -inputtype i16 -inrate 1024000 -outrate 48000 -channels 1 -squaredoutput | multimon-ng -t raw -a FSK9600 /dev/stdin
     
- Notice that multimon-ng must be modified to input 48000 sps audio stream.
+Notice that here [modified multimon-ng](https://github.com/cubehub/multimon-ng) is used that supports 48000 sps input stream for fsk9600 decoder. Read [here](http://andres.svbtle.com/pipe-sdr-iq-data-through-fm-demodulator-for-fsk9600-ax25-reception) why multimon-ng must be modified instead of converting **demod** output to native 22050 format.
