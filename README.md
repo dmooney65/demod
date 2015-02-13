@@ -6,7 +6,7 @@ From this [blog post](http://andres.svbtle.com/pipe-sdr-iq-data-through-fm-demod
 
 # Install
 
-    git clone https://github.com/cubehub/demod.git
+    git clone https://github.com/andresv/demod.git
     cd demod/src
     mkdir build
     cd build
