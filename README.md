@@ -1,3 +1,6 @@
+# Disclaimer
+This tool is not maintained anymore. I made a better one and it can be cloned from here: https://github.com/cubehub/demod
+
 # Demod
 
 Simple command line application for doing AM or FM demodulation. Uses unix pipes for data transfer. Takes raw IQ data as input and outputs demodulated audio.
